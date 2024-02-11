@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'ilist.txt'
+      - '.github/workflows/release.yml'
   workflow_dispatch:
 
 jobs:
@@ -39,6 +40,7 @@ jobs:
           path: custom-*.zip
 
   release:
+    name: Release
     needs: make-custom
     runs-on: ubuntu-latest
     permissions:
@@ -60,4 +62,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ env.DATE }}
+          tag_name: ${{ env.DATE }}
           files: custom-*.zip
