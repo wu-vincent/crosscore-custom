@@ -45,8 +45,10 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Get current date
+        id: date
+        run: |
+          echo "DATE=$(python -c 'from datetime import date; print(date.today().isoformat())')" >> $GITHUB_ENV
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
@@ -57,4 +59,5 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          name: ${{ env.DATE }}
           files: custom-*.zip
