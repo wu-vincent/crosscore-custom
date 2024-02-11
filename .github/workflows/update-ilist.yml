@@ -1,0 +1,27 @@
+name: Update ilist.txt
+
+on:
+  schedule:
+    # Runs at the start of every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download ilist.txt
+        run: |
+          curl -o ilist.txt https://raw.githubusercontent.com/AXiX-official/CrossCore-Internationalizer/main/ilist.txt
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update ilist.txt
