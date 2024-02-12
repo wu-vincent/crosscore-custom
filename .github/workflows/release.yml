@@ -68,5 +68,6 @@ jobs:
         with:
           name: ${{ env.DATE }}
           tag_name: ${{ env.DATE }}
-          files: custom-*.zip
-          body_path: checksum.txt
+          files: |
+            custom-*.zip
+            checksum.txt
