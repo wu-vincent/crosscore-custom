@@ -1,18 +1,25 @@
-import os
 import argparse
+import asyncio
+import logging
+import os
 import shutil
 import tempfile
+
 import aiohttp
-import asyncio
 import tqdm.asyncio
+import tqdm.contrib.logging
 
 base_url = "https://cdn.megagamelog.com/cross/release/{platform}/curr_1/Custom/"
+logger = logging.getLogger(__name__)
 
 
 async def download_file(session, url, path):
     async with session.get(url) as response:
-        with open(path, 'wb') as f:
-            f.write(await response.read())
+        if response.status == 200:  # Check if the response is OK
+            with open(path, 'wb') as f:
+                f.write(await response.read())
+        else:
+            logger.warning(f"Skipping {url}, received status code: {response.status}")
 
 
 async def main(platform: str):
@@ -22,20 +29,21 @@ async def main(platform: str):
         items = file.read().split(',')
 
     with tempfile.TemporaryDirectory() as temp_dir:
-        custom_dir = os.path.join(temp_dir, 'Custom')
-        os.makedirs(custom_dir, exist_ok=True)
+        with tqdm.contrib.logging.logging_redirect_tqdm():
+            custom_dir = os.path.join(temp_dir, 'Custom')
+            os.makedirs(custom_dir, exist_ok=True)
 
-        async with aiohttp.ClientSession() as session:
-            tasks = []
-            for item in items:
-                url = base_url.format(platform=platform) + item
-                path = os.path.join(custom_dir, item)
-                tasks.append(download_file(session, url, path))
+            async with aiohttp.ClientSession() as session:
+                tasks = []
+                for item in items:
+                    url = base_url.format(platform=platform) + item
+                    path = os.path.join(custom_dir, item)
+                    tasks.append(download_file(session, url, path))
 
-            for f in tqdm.asyncio.tqdm.as_completed(tasks):
-                await f
+                for f in tqdm.asyncio.tqdm.as_completed(tasks):
+                    await f
 
-        shutil.make_archive('custom-{}'.format(platform), 'zip', temp_dir, 'Custom')
+            shutil.make_archive('custom-{}'.format(platform), 'zip', temp_dir, 'Custom')
 
 
 if __name__ == "__main__":
