@@ -1,9 +1,11 @@
 # Crosscore Custom 🚀
 
-Welcome! This repository is dedicated to the automated generation of the latest `custom.zip` for both Android and iOS
+[![Release](https://github.com/wu-vincent/crosscore-custom/actions/workflows/release.yml/badge.svg)](https://github.com/wu-vincent/crosscore-custom/actions/workflows/release.yml)
+
+Welcome! This repository is dedicated to the automated generation of the latest [`custom.zip`](https://github.com/wu-vincent/crosscore-custom/releases) for both Android and iOS
 🔥.
 
-欢迎！本仓库包含自动生成的最新的 Android 和 iOS 的 `custom.zip` 🔥。
+欢迎！本仓库包含自动生成的适用于 Android 和 iOS 的最新 [`custom.zip`](https://github.com/wu-vincent/crosscore-custom/releases) 🔥。
 
 ## Credits 🏆
 
