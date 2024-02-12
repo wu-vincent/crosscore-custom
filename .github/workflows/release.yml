@@ -17,15 +17,15 @@ jobs:
         platform: [ ios, android ]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -33,7 +33,7 @@ jobs:
       - name: Run Python script
         run: python make_custom.py ${{ matrix.platform }}
 
-      - name: Archive production artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: custom
@@ -47,16 +47,21 @@ jobs:
       contents: write
 
     steps:
-      - name: Get current date
+      - name: Get Current Date
         id: date
         run: |
           echo "DATE=$(python -c 'from datetime import date; print(date.today().isoformat())')" >> $GITHUB_ENV
 
-      - name: Download artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
           name: custom
           path: .
+
+      - name: Generate Checksums
+        uses: jmgilman/actions-generate-checksum@v1
+        with:
+          patterns: custom-*.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -64,3 +69,4 @@ jobs:
           name: ${{ env.DATE }}
           tag_name: ${{ env.DATE }}
           files: custom-*.zip
+          body_path: checksum.txt
