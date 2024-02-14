@@ -19,7 +19,7 @@ jobs:
 
       - name: Download ilist.txt
         run: |
-          curl -o ilist.txt https://raw.githubusercontent.com/AXiX-official/CrossCore-Internationalizer/main/ilist.txt
+          curl -o ilist.txt https://cdn.megagamelog.com/cross/release/ilist.txt
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
