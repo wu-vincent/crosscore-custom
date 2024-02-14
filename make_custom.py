@@ -9,7 +9,10 @@ import aiohttp
 import tqdm.asyncio
 import tqdm.contrib.logging
 
-base_url = "https://cdn.megagamelog.com/cross/release/{platform}/curr_1/Custom/"
+base_urls = {
+    "android": "https://cdn.megagamelog.com/cross/release/android/curr_1/Custom/",
+    "ios": "https://cdn.megagamelog.com/cross/release/ios/curr_new_1/Custom/",
+}
 logger = logging.getLogger(__name__)
 
 
@@ -23,7 +26,7 @@ async def download_file(session, url, path):
 
 
 async def main(platform: str):
-    assert platform in ["android", "ios"]
+    assert platform in base_urls.keys()
 
     with open("ilist.txt", "r", encoding='utf-8-sig') as file:
         items = file.read().split(',')
@@ -36,7 +39,7 @@ async def main(platform: str):
             async with aiohttp.ClientSession() as session:
                 tasks = []
                 for item in items:
-                    url = base_url.format(platform=platform) + item
+                    url = base_urls[platform] + item
                     path = os.path.join(custom_dir, item)
                     tasks.append(download_file(session, url, path))
 
