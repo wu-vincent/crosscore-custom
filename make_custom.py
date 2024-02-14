@@ -46,7 +46,7 @@ async def main(platform: str):
                 for f in tqdm.asyncio.tqdm.as_completed(tasks):
                     await f
 
-            shutil.make_archive('custom-{}'.format(platform), 'zip', temp_dir, 'Custom')
+            shutil.make_archive(f'custom-{platform}', 'zip', temp_dir, 'Custom')
 
 
 if __name__ == "__main__":
