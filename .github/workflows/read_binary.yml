@@ -1,0 +1,27 @@
+name: Read Binary
+
+on: [ workflow_dispatch ]
+
+jobs:
+  read-binary:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/dotnet/sdk:3.1
+    strategy:
+      matrix:
+        url: [
+          'https://cdn.megagamelog.com/cross/release/android/curr/ver.bytes',
+          'https://cdn.megagamelog.com/cross/release/android/curr_1/ver.bytes',
+          'https://cdn.megagamelog.com/cross/release/ios/curr_new/ver.bytes',
+          'https://cdn.megagamelog.com/cross/release/ios/curr_new_1/ver.bytes',
+        ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and Run Application
+        run: |
+          run: |
+            dotnet new console -n BinaryReader --force
+            cp binary_reader.cs BinaryReader/Program.cs
+            cd BinaryReader
+            dotnet run -- "${{ matrix.url }}"
